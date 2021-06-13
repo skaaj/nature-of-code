@@ -1,36 +1,24 @@
-const fs = require('fs');
-const http = require('http');
-const path = require('path');
+const fs = require("fs");
+const express = require("express");
 
-function handleRequest(req, res) {
-    let pathname = req.url;
+const app = express();
+const port = 9000;
 
-    if (pathname == '/') {
-        pathname = '/index.html';
-    }
+app.use(express.static("static"));
+app.use(express.static("sketches"));
 
-    let ext = path.extname(pathname);
-
-    const typeExt = {
-        '.html': 'text/html',
-        '.js': 'text/javascript',
-        '.css': 'text/css'
-    };
-
-    let contentType = typeExt[ext] || 'text/plain';
-
-    fs.readFile(__dirname + pathname,
-        function (err, data) {
-            if (err) {
-                res.writeHead(500);
-                return res.end('Error loading ' + pathname);
-            }
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(data);
+app.get("/", (req, res) => {
+    fs.readFile(__dirname + "/static/index.html", (err, data) => {
+        if(err) {
+            res.status(500).send("Could not load 'index.html'");
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            res.write(data);
+            res.end();
         }
-    );
-}
+    });
+});
 
-const server = http.createServer(handleRequest);
-
-server.listen(process.env.PORT || 3000);
+app.listen(port, () => console.log("Server started."));
