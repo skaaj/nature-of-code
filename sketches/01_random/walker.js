@@ -7,6 +7,7 @@ let colorDir = 1;
 let x, y;
 
 function setup() {
+    select("body").style("background", "#202122");
     createCanvas(width, height);
     background(0);
     stroke(200, 25);
@@ -18,7 +19,7 @@ function setup() {
 }
 
 function draw() {
-    const dx = random(-5, 5);
+    const dx = random(-1, 5);
     const dy = random(-5, 5);
 
     x += dx;
